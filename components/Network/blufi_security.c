@@ -20,6 +20,7 @@
 
 #include "esp_blufi_api.h"
 #include "blufi_connect.h"
+#include "blufi_init.h"
 
 #include "mbedtls/aes.h"
 #include "mbedtls/dhm.h"

@@ -4,6 +4,7 @@
 #include "esp_log.h"
 #include "esp_blufi.h"
 #include "blufi_connect.h"
+#include "blufi_init.h"
 #ifdef CONFIG_BT_BLUEDROID_ENABLED
 #include "esp_bt.h"
 #include "esp_bt_main.h"

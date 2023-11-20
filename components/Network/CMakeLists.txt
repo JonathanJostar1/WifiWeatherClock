@@ -1,4 +1,4 @@
-set(network_srcs "net_task.c" "blufi_init.c" "blufi_security.c")
+set(network_srcs "net_task.c" "blufi_init.c" "blufi_security.c" "blufi_connect.c")
 
 idf_component_register(SRCS "${network_srcs}"
                        INCLUDE_DIRS "."

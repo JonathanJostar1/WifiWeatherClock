@@ -9,6 +9,9 @@ const static char *TAG = "net_task";
 
 void net_task(void *arg)
 {
+    initialise_wifi();
+
+    blufi_init();
     while(1)
     {
         ESP_LOGI(TAG, "hello net_task");
