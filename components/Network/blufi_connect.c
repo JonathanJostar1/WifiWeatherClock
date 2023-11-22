@@ -364,7 +364,7 @@ int initialise_wifi(void)
     int ret = esp_netif_init();
     if (ret != ESP_OK)
     {
-        ESP_LOGE(TAG, "esp_netif_init failed");
+        ESP_LOGE(TAG, "esp_netif_init failed[%d]", ret);
         return -1;
     }
 
@@ -373,27 +373,27 @@ int initialise_wifi(void)
     ret = esp_event_loop_create_default();
     if (ret != ESP_OK)
     {
-        ESP_LOGE(TAG, "esp_event_loop_create_default failed");
+        ESP_LOGE(TAG, "esp_event_loop_create_default failed[%d]", ret);
         return -2;
     }
 
     esp_netif_t *sta_netif = esp_netif_create_default_wifi_sta();
     if(sta_netif == NULL)
     {
-        ESP_LOGE(TAG, "esp_netif_create_default_wifi_sta failed");
+        ESP_LOGE(TAG, "esp_netif_create_default_wifi_sta failed[%d]", ret);
         return -3;
     }
 
     ret = esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &wifi_event_handler, NULL);
     if (ret != ESP_OK)
     {
-        ESP_LOGE(TAG, "wifi_event_handler register failed");
+        ESP_LOGE(TAG, "wifi_event_handler register failed[%d]", ret);
         return -4;
     }
     ret = esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &ip_event_handler, NULL);
     if (ret != ESP_OK)
     {
-        ESP_LOGE(TAG, "ip_event_handler register failed");
+        ESP_LOGE(TAG, "ip_event_handler register failed[%d]", ret);
         return -5;
     }
 
@@ -401,14 +401,14 @@ int initialise_wifi(void)
     ret = esp_wifi_init(&cfg);
     if (ret != ESP_OK)
     {
-        ESP_LOGE(TAG, "WIFI_INIT_CONFIG_DEFAULT failed");
+        ESP_LOGE(TAG, "WIFI_INIT_CONFIG_DEFAULT failed[%d]", ret);
         return -6;
     }
 
     ret = esp_wifi_set_mode(WIFI_MODE_STA);
     if (ret != ESP_OK)
     {
-        ESP_LOGE(TAG, "esp_wifi_set_mode failed");
+        ESP_LOGE(TAG, "esp_wifi_set_mode failed[%d]", ret);
         return -7;
     }
     
@@ -416,7 +416,7 @@ int initialise_wifi(void)
     ret = esp_wifi_start();
     if (ret != ESP_OK)
     {
-        ESP_LOGE(TAG, "esp_wifi_start failed");
+        ESP_LOGE(TAG, "esp_wifi_start failed[%d]", ret);
         return -7;
     }
 
@@ -430,14 +430,14 @@ int blufi_init(void)
     int ret = initialise_wifi();
     if(ret != ESP_OK)
     {
-        ESP_LOGE(TAG, "initialise_wifi failed");
+        ESP_LOGE(TAG, "initialise_wifi failed[%d]", ret);
         return -1;
     }
 
     ret = esp_bt_controller_mem_release(ESP_BT_MODE_CLASSIC_BT);
     if(ret != ESP_OK)
     {
-        ESP_LOGE(TAG, "esp_bt_controller_mem_release failed");
+        ESP_LOGE(TAG, "esp_bt_controller_mem_release failed[%d]", ret);
         return -2;
     }
 

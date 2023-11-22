@@ -10,8 +10,14 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "net_task.h"
+#include "port_i2c.h"
 
 static TaskHandle_t net_task_handle;
+
+void bsp_config(void)
+{
+    i2c_master_init();
+}
 
 void app_main(void)
 {
