@@ -12,24 +12,24 @@ uint8_t gpio_and_delay_cb(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_
     switch (msg)
     {
     case U8X8_MSG_GPIO_AND_DELAY_INIT:
-        oled_gpio_init();
+        // oled_gpio_init();
         break;
     case U8X8_MSG_GPIO_SPI_DATA:
-        gpio_set_level(OLED_SDA, arg_int);
+        // gpio_set_level(OLED_SDA, arg_int);
         break;
     case U8X8_MSG_GPIO_SPI_CLOCK:
-        gpio_set_level(OLED_SCK, arg_int);
+        // gpio_set_level(OLED_SCK, arg_int);
         break;
     case U8X8_MSG_GPIO_CS: // CS默认接地
         break;
     case U8X8_MSG_GPIO_DC:
-        gpio_set_level(OLED_DC, arg_int);
+        // gpio_set_level(OLED_DC, arg_int);
         break;
     case U8X8_MSG_GPIO_RESET:
-        gpio_set_level(OLED_RST, arg_int);
+        // gpio_set_level(OLED_RST, arg_int);
         break;
     case U8X8_MSG_DELAY_MILLI:
-        vTaskDelay(arg_int / portTICK_PERIOD_MS); // 1000hz
+        vTaskDelay(pdMS_TO_TICKS(arg_int)); // 1000hz
         break;
     default:
         return 0; // A message was received which is not implemented, return 0 to indicate an error
@@ -65,7 +65,7 @@ uint8_t u8x8_byte_i2c_cb(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_p
         buf_idx = 0;
         break;
     case U8X8_MSG_BYTE_END_TRANSFER:
-        esp32_i2c_write(u8x8_GetI2CAddress(u8x8), buf_idx, buffer);
+        // esp32_i2c_write(u8x8_GetI2CAddress(u8x8), buf_idx, buffer);
         break;
     default:
         return 0;
