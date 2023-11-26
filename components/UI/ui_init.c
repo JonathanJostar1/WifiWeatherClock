@@ -105,12 +105,11 @@ void ui_init(void)
     u8g2_InitDisplay(&st7735_u8g2_handle); // 根据所选的芯片进行初始化工作，初始化完成后，显示器处于关闭状态
     u8g2_SetPowerSave(&st7735_u8g2_handle, 0); // 打开显示器
     u8g2_ClearBuffer(&st7735_u8g2_handle);
-    
+
     gpio_pin_set_level(ST7735_BLK_PIN, 1);
     ESP_LOGW("ui_init", "u8g2 init done");
 
     u8g2_SetFont(&st7735_u8g2_handle, u8g2_font_6x12_mr); // 设置英文字体
     u8g2_DrawStr(&st7735_u8g2_handle, 0, 30, "hello world");
     u8g2_SendBuffer(&st7735_u8g2_handle);		// 一定要发送buffer
-
 }
