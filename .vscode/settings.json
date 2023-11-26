@@ -33,7 +33,7 @@
     "**/.vscode",
     "**/.vscode/**"
   ],
-  "idf.adapterTargetName": "esp32s3",
+  "idf.adapterTargetName": "esp32",
   "idf.portWin": "COM25",
   "idf.flashType": "UART",
   "files.associations": {
@@ -83,7 +83,18 @@
     "initializer_list": "c",
     "utility": "c",
     "page_query_wifi_connect.h": "c",
-    "page_mode_list.h": "c"
+    "page_mode_list.h": "c",
+    "i2c.h": "c",
+    "nvs_flash.h": "c",
+    "freertos.h": "c",
+    "esp_clk.h": "c",
+    "port_i2c.h": "c",
+    "ui_task.h": "c",
+    "task.h": "c",
+    "esp_random.h": "c",
+    "stdio.h": "c",
+    "net_task.h": "c",
+    "ui_init.h": "c"
   },
   "C_Cpp.errorSquiggles": "Disabled",
   "idf.port": "/dev/ttyUSB0",

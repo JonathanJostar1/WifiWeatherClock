@@ -4,4 +4,4 @@ idf_component_register(SRCS "${hw_srcs}"
                        INCLUDE_DIRS "."
                        PRIV_INCLUDE_DIRS ""
                        PRIV_REQUIRES "driver"
-                       REQUIRES "")
+                       REQUIRES "esp_hw_support")

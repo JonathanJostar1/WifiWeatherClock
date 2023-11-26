@@ -25,8 +25,8 @@ void net_task(void *arg)
 
     while(1)
     {
-        // ESP_LOGI(TAG, "hello net_task");
-        vTaskDelay(1000);
+        ESP_LOGI(TAG, "%ld", esp_log_timestamp());
+        vTaskDelay(10000 / portTICK_PERIOD_MS);
     }
 
 }
