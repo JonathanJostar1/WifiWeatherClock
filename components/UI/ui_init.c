@@ -112,4 +112,6 @@ void ui_init(void)
     u8g2_SetFont(&st7735_u8g2_handle, u8g2_font_6x12_mr); // 设置英文字体
     u8g2_DrawStr(&st7735_u8g2_handle, 0, 30, "hello world");
     u8g2_SendBuffer(&st7735_u8g2_handle);		// 一定要发送buffer
+
+    
 }
