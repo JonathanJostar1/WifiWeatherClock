@@ -35,21 +35,18 @@
 
 #include "u8x8.h"
 
+/* display on */
 static const uint8_t u8x8_d_st7571_128x128_powersave0_seq[] = {
-	U8X8_START_TRANSFER(), /* enable chip, delay is part of the transfer start */
-	// U8X8_C(0x071),		   /* exit power save mode */
-	// U8X8_C(0x0a8),		   /* disable powersave mode */
-	// U8X8_C(0x0af),		   /* display on */
-	U8X8_END_TRANSFER(),   /* disable chip */
-	U8X8_END()			   /* end of sequence */
+	U8X8_C(0x11),		/* sleep out */
+	U8X8_C(0x29), 		/* Display on */
+	U8X8_END()			/* end of sequence */
 };
 
+/* display off */
 static const uint8_t u8x8_d_st7571_128x128_powersave1_seq[] = {
-	U8X8_START_TRANSFER(), /* enable chip, delay is part of the transfer start */
-	// U8X8_C(0x0ae),		   /* display off */
-	// U8X8_C(0x0a9),		   /* enter powersave mode */
-	U8X8_END_TRANSFER(),   /* disable chip */
-	U8X8_END()			   /* end of sequence */
+	U8X8_C(0x10),		/* sleep in */
+	U8X8_C(0x28), 		/* Display off */
+	U8X8_END()			/* end of sequence */
 };
 
 static const uint8_t u8x8_d_st7571_128x128_flip0_seq[] = {
@@ -155,120 +152,115 @@ static uint8_t u8x8_d_st7571_generic(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int,
 /* QT-2832TSWUG02/ZJY-2832TSWZG02 */
 /* fixed the 0x40 and 0x48 commands, verified with FlipMode example: All ok */
 static const uint8_t u8x8_d_st7571_128x128_init_seq[] = {
-
-	U8X8_START_TRANSFER(), /* enable chip, delay is part of the transfer start */
-
 	// LCD Init For 1.44Inch LCD Panel with ST7735R.
 	U8X8_C(0x11), // Sleep exit
 	U8X8_DLY(100),
 
 	// ST7735R Frame Rate
 	U8X8_C(0xB1),
-	U8X8_A(0x01),
-	U8X8_A(0x2C),
-	U8X8_A(0x2D),
+	U8X8_D1(0x01),
+	U8X8_D1(0x2C),
+	U8X8_D1(0x2D),
 
 	U8X8_C(0xB2),
-	U8X8_A(0x01),
-	U8X8_A(0x2C),
-	U8X8_A(0x2D),
+	U8X8_D1(0x01),
+	U8X8_D1(0x2C),
+	U8X8_D1(0x2D),
 
 	U8X8_C(0xB3),
-	U8X8_A(0x01),
-	U8X8_A(0x2C),
-	U8X8_A(0x2D),
-	U8X8_A(0x01),
-	U8X8_A(0x2C),
-	U8X8_A(0x2D),
+	U8X8_D1(0x01),
+	U8X8_D1(0x2C),
+	U8X8_D1(0x2D),
+	U8X8_D1(0x01),
+	U8X8_D1(0x2C),
+	U8X8_D1(0x2D),
 
 	U8X8_C(0xB4), // Column inversion
-	U8X8_A(0x07),
+	U8X8_D1(0x07),
 
 	// ST7735R Power Sequence
 	U8X8_C(0xC0),
-	U8X8_A(0xA2),
-	U8X8_A(0x02),
-	U8X8_A(0x84),
+	U8X8_D1(0xA2),
+	U8X8_D1(0x02),
+	U8X8_D1(0x84),
 	U8X8_C(0xC1),
-	U8X8_A(0xC5),
+	U8X8_D1(0xC5),
 
 	U8X8_C(0xC2),
-	U8X8_A(0x0A),
-	U8X8_A(0x00),
+	U8X8_D1(0x0A),
+	U8X8_D1(0x00),
 
 	U8X8_C(0xC3),
-	U8X8_A(0x8A),
-	U8X8_A(0x2A),
+	U8X8_D1(0x8A),
+	U8X8_D1(0x2A),
 	U8X8_C(0xC4),
-	U8X8_A(0x8A),
-	U8X8_A(0xEE),
+	U8X8_D1(0x8A),
+	U8X8_D1(0xEE),
 
 	U8X8_C(0xC5), //VCOM 
-	U8X8_A(0x0E), 
+	U8X8_D1(0x0E), 
 	
 	U8X8_C(0x36), //MX, MY, RGB mode 
-	U8X8_A(0xC8), 
+	U8X8_D1(0xC8), 
 
 	//ST7735R Gamma Sequence
 	U8X8_C(0xe0), 
-	U8X8_A(0x0f), 
-	U8X8_A(0x1a), 
-	U8X8_A(0x0f), 
-	U8X8_A(0x18), 
-	U8X8_A(0x2f), 
-	U8X8_A(0x28), 
-	U8X8_A(0x20), 
-	U8X8_A(0x22),
-	U8X8_A(0x1f), 
-	U8X8_A(0x1b), 
-	U8X8_A(0x23), 
-	U8X8_A(0x37),
-	U8X8_A(0x00),	
-	U8X8_A(0x07),
-	U8X8_A(0x02), 
-	U8X8_A(0x10), 
+	U8X8_D1(0x0f), 
+	U8X8_D1(0x1a), 
+	U8X8_D1(0x0f), 
+	U8X8_D1(0x18), 
+	U8X8_D1(0x2f), 
+	U8X8_D1(0x28), 
+	U8X8_D1(0x20), 
+	U8X8_D1(0x22),
+	U8X8_D1(0x1f), 
+	U8X8_D1(0x1b), 
+	U8X8_D1(0x23), 
+	U8X8_D1(0x37),
+	U8X8_D1(0x00),	
+	U8X8_D1(0x07),
+	U8X8_D1(0x02), 
+	U8X8_D1(0x10), 
 
 	U8X8_C(0xe1), 
-	U8X8_A(0x0f), 
-	U8X8_A(0x1b),
-	U8X8_A(0x0f), 
-	U8X8_A(0x17),
-	U8X8_A(0x33), 
-	U8X8_A(0x2c),
-	U8X8_A(0x29),
-	U8X8_A(0x2e),
-	U8X8_A(0x30),
-	U8X8_A(0x30),
-	U8X8_A(0x39),
-	U8X8_A(0x3f),
-	U8X8_A(0x00),
-	U8X8_A(0x07),
-	U8X8_A(0x03),
-	U8X8_A(0x10), 
+	U8X8_D1(0x0f), 
+	U8X8_D1(0x1b),
+	U8X8_D1(0x0f), 
+	U8X8_D1(0x17),
+	U8X8_D1(0x33), 
+	U8X8_D1(0x2c),
+	U8X8_D1(0x29),
+	U8X8_D1(0x2e),
+	U8X8_D1(0x30),
+	U8X8_D1(0x30),
+	U8X8_D1(0x39),
+	U8X8_D1(0x3f),
+	U8X8_D1(0x00),
+	U8X8_D1(0x07),
+	U8X8_D1(0x03),
+	U8X8_D1(0x10), 
 	
 	U8X8_C(0x2a),
-	U8X8_A(0x00),
-	U8X8_A(0x00),
-	U8X8_A(0x00),
-	U8X8_A(0x7f),
+	U8X8_D1(0x00),
+	U8X8_D1(0x00),
+	U8X8_D1(0x00),
+	U8X8_D1(0x7f),
 
 	U8X8_C(0x2b),
-	U8X8_A(0x00),
-	U8X8_A(0x00),
-	U8X8_A(0x00),
-	U8X8_A(0x9f),
+	U8X8_D1(0x00),
+	U8X8_D1(0x00),
+	U8X8_D1(0x00),
+	U8X8_D1(0x9f),
 	
 	U8X8_C(0xF0), //Enable test command  
-	U8X8_A(0x01), 
+	U8X8_D1(0x01), 
 	U8X8_C(0xF6), //Disable ram power save mode 
-	U8X8_A(0x00), 
+	U8X8_D1(0x00), 
 	
 	U8X8_C(0x3A), //65k mode 
-	U8X8_A(0x05),
+	U8X8_D1(0x05),
 	
-	U8X8_C(0x29), //Display on	
-
-	U8X8_END_TRANSFER(), /* disable chip */
+	// U8X8_C(0x29), //Display on	
 	U8X8_END()			 /* end of sequence */
 };
 
@@ -283,7 +275,7 @@ static const u8x8_display_info_t u8x8_st7571_128x128_display_info =
 		/* post_reset_wait_ms = */ 5,	/**/
 		/* sda_setup_time_ns = */ 20,	/* */
 		/* sck_pulse_width_ns = */ 40,	/*  */
-		/* sck_clock_hz = */ 4000000UL, /* since Arduino 1.6.0, the SPI bus speed in Hz. Should be  1000000000/sck_pulse_width_ns */
+		/* sck_clock_hz = */ 1000000UL, /* since Arduino 1.6.0, the SPI bus speed in Hz. Should be  1000000000/sck_pulse_width_ns */
 		/* spi_mode = */ 0,				/* active high, rising edge */
 		/* i2c_bus_clock_100kHz = */ 4, /* 400KHz */
 		/* data_setup_time_ns = */ 15,
@@ -295,6 +287,7 @@ static const u8x8_display_info_t u8x8_st7571_128x128_display_info =
 		/* pixel_width = */ 128,
 		/* pixel_height = */ 128};
 
+#include "esp_log.h"
 uint8_t u8x8_d_st7571_128x128(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
 {
 

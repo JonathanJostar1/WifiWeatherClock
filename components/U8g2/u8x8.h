@@ -635,7 +635,7 @@ void u8x8_SendF(u8x8_t * u8x8, const char *fmt, ...);
 #define U8X8_D1(d0)			(0x11), (d0)
 */
 
-#define U8X8_C(c0)				(U8X8_MSG_CAD_SEND_CMD), (c0)
+#define U8X8_C(c0)				(U8X8_MSG_CAD_START_TRANSFER), (U8X8_MSG_CAD_SEND_CMD), (c0), (U8X8_MSG_CAD_END_TRANSFER)
 #define U8X8_A(a0)				(U8X8_MSG_CAD_SEND_ARG), (a0)
 #define U8X8_CA(c0,a0)			(U8X8_MSG_CAD_SEND_CMD), (c0), (U8X8_MSG_CAD_SEND_ARG), (a0)
 #define U8X8_CAA(c0,a0,a1)		(U8X8_MSG_CAD_SEND_CMD), (c0), (U8X8_MSG_CAD_SEND_ARG), (a0), (U8X8_MSG_CAD_SEND_ARG), (a1)
@@ -643,7 +643,7 @@ void u8x8_SendF(u8x8_t * u8x8, const char *fmt, ...);
 #define U8X8_CAAA(c0,a0,a1, a2)	(U8X8_MSG_CAD_SEND_CMD), (c0), (U8X8_MSG_CAD_SEND_ARG), (a0), (U8X8_MSG_CAD_SEND_ARG), (a1), (U8X8_MSG_CAD_SEND_ARG), (a2)
 #define U8X8_CAAAA(c0,a0,a1,a2,a3)		(U8X8_MSG_CAD_SEND_CMD), (c0), (U8X8_MSG_CAD_SEND_ARG), (a0), (U8X8_MSG_CAD_SEND_ARG), (a1), (U8X8_MSG_CAD_SEND_ARG), (a2), (U8X8_MSG_CAD_SEND_ARG), (a3)
 #define U8X8_AAC(a0,a1,c0)		(U8X8_MSG_CAD_SEND_ARG), (a0), (U8X8_MSG_CAD_SEND_ARG), (a1), (U8X8_MSG_CAD_SEND_CMD), (c0)
-#define U8X8_D1(d0)			(U8X8_MSG_CAD_SEND_DATA), (d0)
+#define U8X8_D1(d0)			(U8X8_MSG_CAD_START_TRANSFER), (U8X8_MSG_CAD_SEND_DATA), (d0), (U8X8_MSG_CAD_END_TRANSFER)
 
 #define U8X8_A4(a0,a1,a2,a3)		U8X8_A(a0), U8X8_A(a1), U8X8_A(a2), U8X8_A(a3)
 #define U8X8_A8(a0,a1,a2,a3,a4,a5,a6,a7)	U8X8_A4((a0), (a1), (a2), (a3)), U8X8_A4((a4), (a5), (a6), (a7))

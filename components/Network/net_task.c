@@ -17,16 +17,16 @@ void net_task(void *arg)
         ret = nvs_flash_init();
     }
 
-    ret = blufi_init();
-    if(ret < 0)
-    {
-        ESP_LOGE(TAG, "blufi_init fail[%d]", ret);
-    }
+    // ret = blufi_init();
+    // if(ret < 0)
+    // {
+    //     ESP_LOGE(TAG, "blufi_init fail[%d]", ret);
+    // }
 
     while(1)
     {
-        ESP_LOGI(TAG, "%ld", esp_log_timestamp());
-        vTaskDelay(10000 / portTICK_PERIOD_MS);
+        // ESP_LOGI(TAG, "%ld", esp_log_timestamp());
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 
 }

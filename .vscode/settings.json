@@ -94,7 +94,8 @@
     "esp_random.h": "c",
     "stdio.h": "c",
     "net_task.h": "c",
-    "ui_init.h": "c"
+    "ui_init.h": "c",
+    "port_spi.h": "c"
   },
   "C_Cpp.errorSquiggles": "Disabled",
   "idf.port": "/dev/ttyUSB0",
