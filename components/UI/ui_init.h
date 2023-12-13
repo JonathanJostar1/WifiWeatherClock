@@ -11,4 +11,10 @@
 
 void ui_init(void);
 
+void draw_font(void);
+
+void draw_box(void);
+
+void testDrawPixelToFillScreen(void);
+
 #endif 

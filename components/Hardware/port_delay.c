@@ -1,55 +1,37 @@
+#include <stdlib.h>
+#include <unistd.h>
 #include "port_delay.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "sdkconfig.h"
+#include "time.h"
+#include "sys/time.h"
 
-#define CPU_FREQUENCY_MAX       240*1000*1000
-#define CPU_FREQUENCY_DEFAULT   160*1000*1000
-#define CPU_FREQUENCY_MIN       80*1000*1000
-
-static int cpu_clk = 0;     // 160M
-
-static __inline void delay_clock(int ts)
+/* 毫秒延时 */
+void port_delay_ms(uint32_t ms)
 {
-    uint32_t start, curr;
- 
-    __asm__ __volatile__("rsr %0, ccount" : "=r"(start));
-    do
-    {
-        __asm__ __volatile__("rsr %0, ccount" : "=r"(curr));
-
-    }while (curr - start <= ts);
+    vTaskDelay(pdMS_TO_TICKS(ms));
 }
 
-void delay_ns(int ns)
+/* 微秒延时 */
+void port_delay_us(uint32_t us)
 {
-    delay_clock(ns * cpu_clk / 100000); //CPU_Freq=160MHz
-}
- 
-void delay_us(int us)
-{
-    delay_clock(us * cpu_clk / 1000000); //CPU_Freq=160MHz
-}
- 
-void delay_ms(int ms)
-{
-    delay_clock(ms * cpu_clk / 1000); //CPU_Freq=160MHz
+    usleep(us);
 }
 
-void delay_init(void)
+/* 获取系统节拍，每1ms加1 */
+uint64_t port_get_systick(void)
 {
-    cpu_clk = CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ;
-    if (cpu_clk != CPU_FREQUENCY_MAX ||
-       cpu_clk != CPU_FREQUENCY_DEFAULT ||
-       cpu_clk != CPU_FREQUENCY_MIN)
-    {
-        cpu_clk = CPU_FREQUENCY_DEFAULT;
+    static uint32_t base = 0;
+    if (base == 0 && xPortGetCoreID() == 0) {
+        base = esp_log_early_timestamp();
     }
-
+    TickType_t tick_count = xPortInIsrContext() ? xTaskGetTickCountFromISR() : xTaskGetTickCount();
+    return base + tick_count * (1000 / configTICK_RATE_HZ);
 }
 
-uint32_t systemtick_get(void)
+uint32_t system_log_timestamp_get(void)
 {
     return esp_log_timestamp();
 }

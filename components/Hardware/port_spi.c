@@ -30,7 +30,7 @@ void spi_master_init(void)
 {
     esp_err_t ret;
     spi_bus_config_t buscfg = {
-        .miso_io_num = -1,
+        .miso_io_num = GPIO_PIN_NUM_MISO,
         .mosi_io_num = GPIO_PIN_NUM_MOSI,
         .sclk_io_num = GPIO_PIN_NUM_CLK,
         .quadwp_io_num      = -1,
@@ -39,8 +39,8 @@ void spi_master_init(void)
     };
     spi_device_interface_config_t devcfg = {
         .clock_speed_hz = SPI_MASTER_CLK_FREQ,  //Clock out at 10 MHz
-        .mode = 3,                              //SPI mode 0
-        .spics_io_num = -1,                     //CS pin
+        .mode = 0,                              //SPI mode 0
+        .spics_io_num = GPIO_PIN_NUM_CS,        //CS pin
         .queue_size = 7,                        //We want to be able to queue 7 transactions at a time
     };
 

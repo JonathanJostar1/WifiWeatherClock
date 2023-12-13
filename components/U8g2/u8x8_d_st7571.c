@@ -34,35 +34,67 @@
 */
 
 #include "u8x8.h"
+#include "esp_log.h"
 
 /* display on */
 static const uint8_t u8x8_d_st7571_128x128_powersave0_seq[] = {
-	U8X8_C(0x11),		/* sleep out */
-	U8X8_C(0x29), 		/* Display on */
-	U8X8_END()			/* end of sequence */
+	U8X8_START_TRANSFER(),
+	U8X8_C(0x11), /* sleep out */
+	U8X8_C(0x29), /* Display on */
+	U8X8_END_TRANSFER(),
+	U8X8_END() /* end of sequence */
 };
 
 /* display off */
 static const uint8_t u8x8_d_st7571_128x128_powersave1_seq[] = {
-	U8X8_C(0x10),		/* sleep in */
-	U8X8_C(0x28), 		/* Display off */
-	U8X8_END()			/* end of sequence */
+	U8X8_START_TRANSFER(),
+	U8X8_C(0x10), /* sleep in */
+	U8X8_C(0x28), /* Display off */
+	U8X8_END_TRANSFER(),
+	U8X8_END() /* end of sequence */
 };
 
+/* 竖屏 0 */
 static const uint8_t u8x8_d_st7571_128x128_flip0_seq[] = {
 	U8X8_START_TRANSFER(), /* enable chip, delay is part of the transfer start */
-	// U8X8_C(0x0a0),		   /* segment remap a0/a1*/
-	// U8X8_C(0x0c8),		   /* c0: scan dir normal, c8: reverse */
+	U8X8_C(0x36),		   /* segment remap a0/a1*/
+	U8X8_C(0xC8),		   /* c0: scan dir normal, c8: reverse */
 	U8X8_END_TRANSFER(),   /* disable chip */
 	U8X8_END()			   /* end of sequence */
 };
 
+/* 90 */
 static const uint8_t u8x8_d_st7571_128x128_flip1_seq[] = {
 	U8X8_START_TRANSFER(), /* enable chip, delay is part of the transfer start */
-	// U8X8_C(0x0a1),		   /* segment remap a0/a1*/
-	// U8X8_C(0x0c0),		   /* c0: scan dir normal, c8: reverse */
+	U8X8_C(0x36),		   /* segment remap a0/a1*/
+	U8X8_C(0xA8),		   /* c0: scan dir normal, c8: reverse */
 	U8X8_END_TRANSFER(),   /* disable chip */
 	U8X8_END()			   /* end of sequence */
+};
+
+/* 180 */
+static const uint8_t u8x8_d_st7571_128x128_flip2_seq[] = {
+	U8X8_START_TRANSFER(), /* enable chip, delay is part of the transfer start */
+	U8X8_C(0x36),		   /* segment remap a0/a1*/
+	U8X8_C(0x08),		   /* c0: scan dir normal, c8: reverse */
+	U8X8_END_TRANSFER(),   /* disable chip */
+	U8X8_END()			   /* end of sequence */
+};
+
+/* 270 */
+static const uint8_t u8x8_d_st7571_128x128_flip3_seq[] = {
+	U8X8_START_TRANSFER(), /* enable chip, delay is part of the transfer start */
+	U8X8_C(0x36),		   /* segment remap a0/a1*/
+	U8X8_C(0x68),		   /* c0: scan dir normal, c8: reverse */
+	U8X8_END_TRANSFER(),   /* disable chip */
+	U8X8_END()			   /* end of sequence */
+};
+
+static const uint8_t *(st7571_128x128_flip_mode_seq[]) = {
+	u8x8_d_st7571_128x128_flip0_seq,
+	u8x8_d_st7571_128x128_flip1_seq,
+	u8x8_d_st7571_128x128_flip2_seq,
+	u8x8_d_st7571_128x128_flip3_seq,
 };
 
 /*===================================================*/
@@ -92,14 +124,14 @@ static uint8_t u8x8_d_st7571_generic(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int,
 			u8x8_cad_SendSequence(u8x8, u8x8_d_st7571_128x128_powersave1_seq);
 		break;
 	case U8X8_MSG_DISPLAY_SET_FLIP_MODE:
-		if (arg_int == 0)
+		if (arg_int < 4)
 		{
-			u8x8_cad_SendSequence(u8x8, u8x8_d_st7571_128x128_flip0_seq);
+			u8x8_cad_SendSequence(u8x8, st7571_128x128_flip_mode_seq[arg_int]);
 			u8x8->x_offset = u8x8->display_info->default_x_offset;
 		}
 		else
 		{
-			u8x8_cad_SendSequence(u8x8, u8x8_d_st7571_128x128_flip1_seq);
+			u8x8_cad_SendSequence(u8x8, u8x8_d_st7571_128x128_flip0_seq);
 			u8x8->x_offset = u8x8->display_info->flipmode_x_offset;
 		}
 		break;
@@ -117,24 +149,17 @@ static uint8_t u8x8_d_st7571_generic(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int,
 		x = ((u8x8_tile_t *)arg_ptr)->x_pos;
 		x *= 8;
 		x += u8x8->x_offset;
-		u8x8_cad_SendCmd(u8x8, 0x010 | (x >> 4));
-		u8x8_cad_SendCmd(u8x8, 0x000 | ((x & 15)));
-		u8x8_cad_SendCmd(u8x8, 0x0b0 | (((u8x8_tile_t *)arg_ptr)->y_pos));
+		u8x8_cad_SendCmd(u8x8, 0x10 | (x >> 4));
+		u8x8_cad_SendCmd(u8x8, 0x00 | ((x & 15)));
+		u8x8_cad_SendCmd(u8x8, 0xb0 | (((u8x8_tile_t *)arg_ptr)->y_pos));
+
+		ESP_LOGW("st7735s", "U8X8_MSG_DISPLAY_DRAW_TILE, arg_int: %d, cnt: %d, x: %d, y: %d", arg_int, ((u8x8_tile_t *)arg_ptr)->cnt,
+							((u8x8_tile_t *)arg_ptr)->x_pos, ((u8x8_tile_t *)arg_ptr)->y_pos);
 
 		do
 		{
 			c = ((u8x8_tile_t *)arg_ptr)->cnt;
 			ptr = ((u8x8_tile_t *)arg_ptr)->tile_ptr;
-			/* SendData can not handle more than 255 bytes */
-			/*
-				if ( c > 31 )
-				{
-				  u8x8_cad_SendData(u8x8, 31*8, ptr);
-				  ptr+=31*8;
-				  c -= 31;
-				}
-			*/
-
 			u8x8_cad_SendData(u8x8, c * 8, ptr);
 			arg_int--;
 		} while (arg_int > 0);
@@ -152,8 +177,12 @@ static uint8_t u8x8_d_st7571_generic(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int,
 /* QT-2832TSWUG02/ZJY-2832TSWZG02 */
 /* fixed the 0x40 and 0x48 commands, verified with FlipMode example: All ok */
 static const uint8_t u8x8_d_st7571_128x128_init_seq[] = {
+
+	U8X8_START_TRANSFER(), /* enable chip, delay is part of the transfer start */
+
 	// LCD Init For 1.44Inch LCD Panel with ST7735R.
 	U8X8_C(0x11), // Sleep exit
+	U8X8_C(0x28),
 	U8X8_DLY(100),
 
 	// ST7735R Frame Rate
@@ -197,37 +226,37 @@ static const uint8_t u8x8_d_st7571_128x128_init_seq[] = {
 	U8X8_D1(0x8A),
 	U8X8_D1(0xEE),
 
-	U8X8_C(0xC5), //VCOM 
-	U8X8_D1(0x0E), 
-	
-	U8X8_C(0x36), //MX, MY, RGB mode 
-	U8X8_D1(0xC8), 
+	U8X8_C(0xC5), // VCOM
+	U8X8_D1(0x0E),
 
-	//ST7735R Gamma Sequence
-	U8X8_C(0xe0), 
-	U8X8_D1(0x0f), 
-	U8X8_D1(0x1a), 
-	U8X8_D1(0x0f), 
-	U8X8_D1(0x18), 
-	U8X8_D1(0x2f), 
-	U8X8_D1(0x28), 
-	U8X8_D1(0x20), 
+	U8X8_C(0x36), // MX, MY, RGB mode
+	U8X8_D1(0xC8),
+
+	// ST7735R Gamma Sequence
+	U8X8_C(0xe0),
+	U8X8_D1(0x0f),
+	U8X8_D1(0x1a),
+	U8X8_D1(0x0f),
+	U8X8_D1(0x18),
+	U8X8_D1(0x2f),
+	U8X8_D1(0x28),
+	U8X8_D1(0x20),
 	U8X8_D1(0x22),
-	U8X8_D1(0x1f), 
-	U8X8_D1(0x1b), 
-	U8X8_D1(0x23), 
-	U8X8_D1(0x37),
-	U8X8_D1(0x00),	
-	U8X8_D1(0x07),
-	U8X8_D1(0x02), 
-	U8X8_D1(0x10), 
-
-	U8X8_C(0xe1), 
-	U8X8_D1(0x0f), 
+	U8X8_D1(0x1f),
 	U8X8_D1(0x1b),
-	U8X8_D1(0x0f), 
+	U8X8_D1(0x23),
+	U8X8_D1(0x37),
+	U8X8_D1(0x00),
+	U8X8_D1(0x07),
+	U8X8_D1(0x02),
+	U8X8_D1(0x10),
+
+	U8X8_C(0xe1),
+	U8X8_D1(0x0f),
+	U8X8_D1(0x1b),
+	U8X8_D1(0x0f),
 	U8X8_D1(0x17),
-	U8X8_D1(0x33), 
+	U8X8_D1(0x33),
 	U8X8_D1(0x2c),
 	U8X8_D1(0x29),
 	U8X8_D1(0x2e),
@@ -238,8 +267,8 @@ static const uint8_t u8x8_d_st7571_128x128_init_seq[] = {
 	U8X8_D1(0x00),
 	U8X8_D1(0x07),
 	U8X8_D1(0x03),
-	U8X8_D1(0x10), 
-	
+	U8X8_D1(0x10),
+
 	U8X8_C(0x2a),
 	U8X8_D1(0x00),
 	U8X8_D1(0x00),
@@ -251,17 +280,18 @@ static const uint8_t u8x8_d_st7571_128x128_init_seq[] = {
 	U8X8_D1(0x00),
 	U8X8_D1(0x00),
 	U8X8_D1(0x9f),
-	
-	U8X8_C(0xF0), //Enable test command  
-	U8X8_D1(0x01), 
-	U8X8_C(0xF6), //Disable ram power save mode 
-	U8X8_D1(0x00), 
-	
-	U8X8_C(0x3A), //65k mode 
+
+	U8X8_C(0xF0), // Enable test command
+	U8X8_D1(0x01),
+	U8X8_C(0xF6), // Disable ram power save mode
+	U8X8_D1(0x00),
+
+	U8X8_C(0x3A), // 65k mode
 	U8X8_D1(0x05),
-	
-	// U8X8_C(0x29), //Display on	
-	U8X8_END()			 /* end of sequence */
+
+	// U8X8_C(0x29), //Display on
+	U8X8_END_TRANSFER(),
+	U8X8_END() /* end of sequence */
 };
 
 static const u8x8_display_info_t u8x8_st7571_128x128_display_info =
@@ -287,12 +317,11 @@ static const u8x8_display_info_t u8x8_st7571_128x128_display_info =
 		/* pixel_width = */ 128,
 		/* pixel_height = */ 128};
 
-#include "esp_log.h"
 uint8_t u8x8_d_st7571_128x128(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
 {
 
-	// if (u8x8_d_st7571_generic(u8x8, msg, arg_int, arg_ptr) != 0)
-	// 	return 1;
+	if (u8x8_d_st7571_generic(u8x8, msg, arg_int, arg_ptr) != 0)
+		return 1;
 
 	switch (msg)
 	{
@@ -301,6 +330,7 @@ uint8_t u8x8_d_st7571_128x128(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *
 		u8x8_cad_SendSequence(u8x8, u8x8_d_st7571_128x128_init_seq);
 		break;
 	case U8X8_MSG_DISPLAY_SETUP_MEMORY:
+		ESP_LOGW("st7735", "U8X8_MSG_DISPLAY_SETUP_MEMORY");
 		u8x8_d_helper_display_setup_memory(u8x8, &u8x8_st7571_128x128_display_info);
 		break;
 	default:

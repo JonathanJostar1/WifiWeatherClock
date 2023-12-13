@@ -8,9 +8,8 @@
 #define SPI_HOST_USE                SPI2_HOST
 #define GPIO_PIN_NUM_CLK            GPIO_NUM_16
 #define GPIO_PIN_NUM_MOSI           GPIO_NUM_17
-
-#define GPIO_PIN_NUM_MISO           GPIO_NUM_25
-#define GPIO_PIN_NUM_CS             GPIO_NUM_22
+#define GPIO_PIN_NUM_MISO           -1
+#define GPIO_PIN_NUM_CS             GPIO_NUM_18
 
 #define SPI_MASTER_CLK_FREQ         1*1000*1000
 

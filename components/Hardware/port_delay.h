@@ -3,19 +3,20 @@
 
 #include <stdint.h>
 
-/* ns级延时 */
-void delay_ns(int ns);
+#define delay_ms port_delay_ms
+#define delay_us port_delay_us
+#define system_tick port_get_systick
 
-/* us级延时 */
-void delay_us(int us);
+/* 毫秒延时 */
+void port_delay_ms(uint32_t ms);
 
-/* ms级延时 */
-void delay_ms(int ms);
+/* 微秒延时 */
+void port_delay_us(uint32_t us);
 
-/* delay初始化 */
-void delay_init(void);
+/* 获取系统节拍，每1ms加1 */
+uint64_t port_get_systick(void);
 
-/* 获取系统运行时间 */
-uint32_t systemtick_get(void);
+uint32_t system_log_timestamp_get(void);
+
 
 #endif 
