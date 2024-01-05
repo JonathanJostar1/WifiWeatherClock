@@ -10,18 +10,11 @@ const static char *TAG = "net_task";
 
 void net_task(void *arg)
 {
-    int ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) 
+    int ret = blufi_init();
+    if(ret < 0)
     {
-        nvs_flash_erase();
-        ret = nvs_flash_init();
+        ESP_LOGE(TAG, "blufi_init fail[%d]", ret);
     }
-
-    // ret = blufi_init();
-    // if(ret < 0)
-    // {
-    //     ESP_LOGE(TAG, "blufi_init fail[%d]", ret);
-    // }
 
     while(1)
     {

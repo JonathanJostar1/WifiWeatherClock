@@ -55,5 +55,4 @@ void spi_master_init(void)
     {
         ESP_LOGE(TAG, "spi_bus_add_device fail");
     }
-    ESP_LOGW(TAG, "spi_master_init finish");
 }

@@ -59,7 +59,7 @@ void LCD_GPIO_Init(void)
 }
 
 // LCD Init For 1.44Inch LCD Panel with ST7735R.
-void Lcd_Init(void)
+void lcd_init(void)
 {
     spi_master_init();
     LCD_GPIO_Init();
