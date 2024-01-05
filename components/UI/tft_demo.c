@@ -102,13 +102,12 @@ void showimage(const unsigned char *p) // 显示40*40 QQ图片
 // 取模方式 水平扫描 从左到右 低位在前
 void Fullscreen_showimage(const unsigned char *p) // 显示128*128 图片
 {
-    int i, j, k;
     unsigned char picH, picL;
 
     Lcd_Clear(WHITE); // 清屏
 
     Lcd_SetRegion(0, 0, 127, 127); // 坐标设置:扫描起点到终点0到127，刚好128个点
-    for (i = 0; i < 128 * 128; i++)
+    for (int i = 0; i < 128 * 128; i++)
     {
         picL = *(p + i * 2); // 数据低位在前
         picH = *(p + i * 2 + 1);

@@ -8,13 +8,11 @@
 
 void ui_task(void *arg)
 {
-    ui_init();
-    // Lcd_Init();
-    testDrawPixelToFillScreen();
+    lcd_init();
     while (1)
     {
-        vTaskDelay(2000);
-        // testDrawPixelToFillScreen();
+        tft_test_demo();
+        vTaskDelay(1000);
     }
 }
 

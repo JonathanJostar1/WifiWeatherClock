@@ -36,7 +36,7 @@
 
 
 void Lcd_Reset(void);
-void Lcd_Init(void);
+void lcd_init(void);
 void Lcd_Clear(uint16_t Color);
 void LCD_WriteData_16Bit(uint16_t Data);
 void Lcd_SetXY(uint16_t x, uint16_t y);
